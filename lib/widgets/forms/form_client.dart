@@ -28,6 +28,7 @@ class _FormClientState extends State<FormClient> {
             children: [
               TextFieldBase(
                 text: 'Pasaporte',
+                isRequired: false,
                 type: TypeInput.passport,
                 controller: _passportController,
                 txtCapitalization: TextCapitalization.words,

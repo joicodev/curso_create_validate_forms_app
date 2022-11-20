@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 class TextFieldBase extends StatelessWidget {
   final String text;
   final TypeInput? type;
+  final isRequired;
   final TextEditingController controller;
   final TextCapitalization txtCapitalization;
 
@@ -14,6 +15,7 @@ class TextFieldBase extends StatelessWidget {
     Key? key,
     this.type,
     required this.text,
+    this.isRequired = true,
     required this.controller,
     this.txtCapitalization = TextCapitalization.none,
   }) : super(key: key);
@@ -27,7 +29,14 @@ class TextFieldBase extends StatelessWidget {
       textCapitalization: txtCapitalization,
       inputFormatters: _validateInputFormatter,
       decoration: InputDecoration(label: Text(text)),
-      validator: (String? value) => _validateStructure(value ?? ""),
+      validator: (String? value) {
+        print("value $value");
+        if ((value == null || value.isEmpty) && !isRequired) {
+          return null;
+        }
+
+        return _validateStructure(value ?? "");
+      },
     );
   }
 
@@ -73,6 +82,10 @@ class TextFieldBase extends StatelessWidget {
   }
 
   String? _validateStructure(String value) {
+    if (isRequired && value.isEmpty) {
+      return "El campo $text es requerido";
+    }
+
     switch (type) {
       case TypeInput.passport:
         final isValid = Validate.validatePassport(value);
